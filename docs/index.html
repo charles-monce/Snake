@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>monceai — Steering an explainable clause engine with mutual information</title>
 <meta name="description" content="A single-script, dependency-free explainable oracle for CSV data. Mutual-information-steered clause construction systematically beats uniform-random opposition on wide, noisy tables.">
-<meta name="author" content="Charles Dana">
+<meta name="author" content="Charles Dana · Claude Opus (Anthropic)">
 <!-- Open Graph / social preview: what GitHub and chat apps unfurl -->
 <meta property="og:type" content="article">
-<meta property="og:title" content="monceai — MI-steered explainable clause learning">
-<meta property="og:description" content="One file, one class, no dependencies, O(m·n²). MI-steered clauses beat random opposition 40W-0L on wide noisy tables (p≈0); identical on clean data.">
+<meta property="og:title" content="monceai × Claude Opus — MI-steered explainable clause learning">
+<meta property="og:description" content="One file, one class, no dependencies, O(m·n²). MI-steered clauses beat random opposition 40W-0L on wide noisy tables (p≈0); identical on clean data. Built by Monceai with Claude Opus (Anthropic); merged upstream into Snake.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233b3b98'/%3E%3Cpath d='M7 23V9l5 8 4-8 4 8 5-8v14' fill='none' stroke='white' stroke-width='2.4' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
   :root{
     --ink:#1a1a2e; --sub:#5a5a72; --line:#e4e4ee; --accent:#3b3b98;
@@ -52,20 +53,50 @@
   footer{border-top:1px solid var(--line);margin-top:64px;padding-top:24px;color:var(--sub);font-size:13.5px}
   .fig-note{font-size:13px;color:var(--sub);margin-top:-6px}
   hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+  /* brand bar */
+  .brandbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+            padding:16px 0 4px;font:13px var(--mono);color:var(--sub)}
+  .brandbar .mark{display:flex;align-items:center;gap:9px;color:var(--ink);text-decoration:none;font-weight:700}
+  .brandbar .x{color:var(--accent);font-weight:700}
+  .brandbar .anthropic{display:flex;align-items:center;gap:7px;color:var(--ink);font-weight:600}
+  .brandbar .dot{width:9px;height:9px;border-radius:50%;background:#d97757;display:inline-block}
+  .brandbar .sep{color:var(--line)}
+  .brandbar a{color:var(--sub);text-decoration:none;border-bottom:1px dotted var(--line)}
+  .brandbar a:hover{color:var(--accent)}
+  .collab{display:inline-block;margin:14px 0 0;padding:5px 12px;border-radius:999px;
+          background:linear-gradient(90deg,#3b3b98,#d97757);color:#fff;
+          font:600 12px/1 var(--mono);letter-spacing:.04em}
 </style>
 </head>
 <body>
 <div class="wrap">
+
+<div class="brandbar">
+  <a class="mark" href="https://monce.ai">
+    <svg width="26" height="26" viewBox="0 0 32 32" aria-label="Monce">
+      <rect width="32" height="32" rx="7" fill="#3b3b98"/>
+      <path d="M7 23V9l5 8 4-8 4 8 5-8v14" fill="none" stroke="white"
+            stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    Monceai
+  </a>
+  <span class="x">×</span>
+  <span class="anthropic"><span class="dot"></span>Claude Opus · Anthropic</span>
+  <span class="sep">|</span>
+  <a href="https://landing.aws.monce.ai/">landing.aws.monce.ai</a>
+</div>
 
 <header>
   <div class="eyebrow">Explainable ML · single script · zero dependencies</div>
   <h1>monceai <span class="snake">🐍</span></h1>
   <p class="lede">Steering an explainable clause engine with mutual information —
      and a controlled study of exactly when that helps.</p>
+  <span class="collab">monceai × Claude Opus · a Monceai + Anthropic-model collaboration</span>
   <div class="byline">
-    Charles Dana · <a href="https://algorithme.ai">Algorithme.ai</a> ·
-    an article rewrite of the original
-    <a href="https://github.com/AlgorithmeAi/Snake">Snake</a>
+    By <strong>Charles Dana</strong> (AI+ML @ Monceai) with <strong>Claude Opus</strong> (Anthropic).<br>
+    An article rewrite of the original
+    <a href="https://github.com/AlgorithmeAi/Snake">Snake</a> —
+    <a href="https://github.com/AlgorithmeAi/Snake/pull/1">merged upstream</a>.
   </div>
 </header>
 
