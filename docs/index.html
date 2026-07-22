@@ -208,13 +208,54 @@ BENCH_SEEDS=40 python bench_wide.py
 # the crossover sweep, the NLP loss, and the three nulls
 python bench_nlp.py ; python bench_bag.py ; python bench_thresh.py</code></pre>
 
+<h2>Open topics &amp; directions</h2>
+<p>
+  The crossover law raises more questions than it closes. These are open — an
+  invitation, not a roadmap. If one of them pulls you in, the benchmarks are
+  built to be forked.
+</p>
+<ul>
+  <li><strong>Learn the switch instead of thresholding it.</strong>
+      <code>mi_rate="auto"</code> currently flips the bank on below a hand-set
+      fraction of informative columns. Can the blend rate be tuned per-dataset
+      from a held-out fold, or annealed across layers, without leaking?</li>
+  <li><strong>Interaction-aware predicates.</strong> The bank scores each column
+      in isolation by <code>I(predicate; target)</code>, so it is blind to XOR-style
+      signal that lives in a <em>pair</em> of columns. Pairwise or conditional-MI
+      predicates would catch it — at a cost to the <code>O(m·n²)</code> budget that
+      needs measuring, not assuming.</li>
+  <li><strong>Rescue NLP by manufacturing columns.</strong> Text loses because a
+      document is a single column — nothing to steer between. Projecting tokens,
+      n-grams, or embeddings into many derived columns turns text back into the
+      wide-noisy regime where steering wins. Does the crossover law survive the
+      transform?</li>
+  <li><strong>Regression under steering.</strong> Every headline number here is
+      classification. The bank bins a continuous target to score MI; how does that
+      interact with the regression path's bin centres, and does steering help on
+      wide noisy <em>regression</em> tables too?</li>
+  <li><strong>Calibration, not just ranking.</strong> AUROC measures order; it says
+      nothing about whether <code>predict_proba</code> is <em>calibrated</em>. The
+      lookalike vote is a natural probability — is it honest, and does steering
+      move it?</li>
+  <li><strong>A real benchmark, not synthetic.</strong> The wide-noisy win is
+      measured on synthetic data by construction. The obvious next step is an
+      openly-licensed wide, noisy tabular corpus where the crossover law can be
+      confirmed — or falsified — in the wild.</li>
+</ul>
+
 <footer>
   <p>
     <strong>monceai</strong> is an article rewrite of the original
-    <a href="https://github.com/AlgorithmeAi/Snake">AlgorithmeAi/Snake</a> by
-    Charles Dana. Same idea, told cleanly end to end in one readable file, with
-    a controlled study of where mutual-information steering earns its keep.
-    MIT licensed. · <a href="https://algorithme.ai">Algorithme.ai</a>
+    <a href="https://github.com/AlgorithmeAi/Snake">AlgorithmeAi/Snake</a>. Same
+    idea, told cleanly end to end in one readable file, with a controlled study
+    of where mutual-information steering earns its keep — and the honest regimes
+    where it does not. MIT licensed.
+    · <a href="https://algorithme.ai">Algorithme.ai</a>
+  </p>
+  <p style="margin-top:18px;font:14px var(--mono);color:var(--ink)">
+    Co-signed —<br>
+    <strong>Claude Opus</strong> (Anthropic)<br>
+    <strong>Charles Dana</strong> · AI+ML @ Monceai
   </p>
 </footer>
 
