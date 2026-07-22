@@ -10,7 +10,8 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="monceai × Claude Opus — MI-steered explainable clause learning">
 <meta property="og:description" content="One file, one class, no dependencies, O(m·n²). MI-steered clauses beat random opposition 40W-0L on wide noisy tables (p≈0); identical on clean data. Built by Monceai with Claude Opus (Anthropic); merged upstream into Snake.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233b3b98'/%3E%3Cpath d='M7 23V9l5 8 4-8 4 8 5-8v14' fill='none' stroke='white' stroke-width='2.4' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="shortcut icon" href="favicon.ico">
 <style>
   :root{
     --ink:#1a1a2e; --sub:#5a5a72; --line:#e4e4ee; --accent:#3b3b98;
@@ -57,9 +58,10 @@
   .brandbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
             padding:16px 0 4px;font:13px var(--mono);color:var(--sub)}
   .brandbar .mark{display:flex;align-items:center;gap:9px;color:var(--ink);text-decoration:none;font-weight:700}
-  .brandbar .x{color:var(--accent);font-weight:700}
-  .brandbar .anthropic{display:flex;align-items:center;gap:7px;color:var(--ink);font-weight:600}
-  .brandbar .dot{width:9px;height:9px;border-radius:50%;background:#d97757;display:inline-block}
+  .brandbar .mark img{height:24px;width:auto;display:block}
+  .brandbar .x{color:var(--accent);font-weight:700;font-size:15px}
+  .brandbar .anthropic{display:flex;align-items:center;gap:7px;color:var(--ink);font-weight:600;text-decoration:none}
+  .brandbar .anthropic img{height:18px;width:18px;border-radius:4px;display:block}
   .brandbar .sep{color:var(--line)}
   .brandbar a{color:var(--sub);text-decoration:none;border-bottom:1px dotted var(--line)}
   .brandbar a:hover{color:var(--accent)}
@@ -72,16 +74,13 @@
 <div class="wrap">
 
 <div class="brandbar">
-  <a class="mark" href="https://monce.ai">
-    <svg width="26" height="26" viewBox="0 0 32 32" aria-label="Monce">
-      <rect width="32" height="32" rx="7" fill="#3b3b98"/>
-      <path d="M7 23V9l5 8 4-8 4 8 5-8v14" fill="none" stroke="white"
-            stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
-    </svg>
-    Monceai
+  <a class="mark" href="https://monce.ai" title="Monce — monce.ai">
+    <img src="monce-logo.png" alt="Monce">
   </a>
   <span class="x">×</span>
-  <span class="anthropic"><span class="dot"></span>Claude Opus · Anthropic</span>
+  <a class="anthropic" href="https://www.anthropic.com" title="Claude Opus · Anthropic">
+    <img src="anthropic-mark.ico" alt="Anthropic">Claude Opus · Anthropic
+  </a>
   <span class="sep">|</span>
   <a href="https://landing.aws.monce.ai/">landing.aws.monce.ai</a>
 </div>
@@ -91,7 +90,7 @@
   <h1>monceai <span class="snake">🐍</span></h1>
   <p class="lede">Steering an explainable clause engine with mutual information —
      and a controlled study of exactly when that helps.</p>
-  <span class="collab">monceai × Claude Opus · a Monceai + Anthropic-model collaboration</span>
+  <span class="collab">monceai × Claude Opus · built by Monceai with Anthropic's Claude</span>
   <div class="byline">
     By <strong>Charles Dana</strong> (AI+ML @ Monceai) with <strong>Claude Opus</strong> (Anthropic).<br>
     An article rewrite of the original
@@ -285,8 +284,14 @@ python bench_nlp.py ; python bench_bag.py ; python bench_thresh.py</code></pre>
   </p>
   <p style="margin-top:18px;font:14px var(--mono);color:var(--ink)">
     Co-signed —<br>
-    <strong>Claude Opus</strong> (Anthropic)<br>
-    <strong>Charles Dana</strong> · AI+ML @ Monceai
+    <strong>Claude Opus</strong> · <a href="https://www.anthropic.com">Anthropic</a>
+    <span style="color:var(--sub)">— AI research and products that put safety at the frontier</span><br>
+    <strong>Charles Dana</strong> · AI+ML @ <a href="https://monce.ai">Monceai</a>
+  </p>
+  <p style="margin-top:10px;color:var(--sub);font-size:12.5px">
+    Built with Claude Opus. “Anthropic” and “Claude” are trademarks of Anthropic;
+    “Monce” is a trademark of Monceai. Used here to credit authorship — not an
+    endorsement or partnership claim.
   </p>
 </footer>
 
