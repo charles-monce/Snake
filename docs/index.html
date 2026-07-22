@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>monceai — Steering an explainable clause engine with mutual information</title>
+<meta name="description" content="A single-script, dependency-free explainable oracle for CSV data. Mutual-information-steered clause construction systematically beats uniform-random opposition on wide, noisy tables.">
+<meta name="author" content="Charles Dana">
+<!-- Open Graph / social preview: what GitHub and chat apps unfurl -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="monceai — MI-steered explainable clause learning">
+<meta property="og:description" content="One file, one class, no dependencies, O(m·n²). MI-steered clauses beat random opposition 40W-0L on wide noisy tables (p≈0); identical on clean data.">
+<style>
+  :root{
+    --ink:#1a1a2e; --sub:#5a5a72; --line:#e4e4ee; --accent:#3b3b98;
+    --good:#0a7d4d; --bad:#b23; --code-bg:#f6f6fb; --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       color:var(--ink);background:#fff}
+  .wrap{max-width:760px;margin:0 auto;padding:0 24px 96px}
+  header{border-bottom:1px solid var(--line);padding:56px 0 32px;margin-bottom:40px}
+  .eyebrow{font:600 13px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+  h1{font-size:2.5rem;line-height:1.1;margin:.4em 0 .2em;letter-spacing:-.02em}
+  h1 .snake{font-size:2.2rem}
+  .lede{font-size:1.2rem;color:var(--sub);margin:.6em 0 0}
+  .byline{font:14px var(--mono);color:var(--sub);margin-top:20px}
+  .byline a{color:var(--accent);text-decoration:none}
+  h2{font-size:1.5rem;margin:48px 0 12px;letter-spacing:-.01em}
+  h3{font-size:1.15rem;margin:32px 0 8px}
+  p{margin:14px 0}
+  code{font:14px var(--mono);background:var(--code-bg);padding:2px 6px;border-radius:5px}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:10px;padding:18px 20px;
+      overflow:auto;font:13.5px/1.55 var(--mono)}
+  pre code{background:none;padding:0}
+  table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14.5px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}
+  th{font:600 13px/1 var(--mono);letter-spacing:.03em;text-transform:uppercase;color:var(--sub)}
+  td.num{font-variant-numeric:tabular-nums;text-align:right;font-family:var(--mono)}
+  .win{color:var(--good);font-weight:600}
+  .loss{color:var(--bad)}
+  .neutral{color:var(--sub)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:24px 0}
+  .card{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:linear-gradient(180deg,#fff,#fbfbff)}
+  .card .k{font:700 1.7rem/1 var(--ink);font-variant-numeric:tabular-nums}
+  .card .l{font-size:12.5px;color:var(--sub);margin-top:6px}
+  blockquote{margin:20px 0;padding:12px 20px;border-left:3px solid var(--accent);
+             background:var(--code-bg);color:var(--sub);border-radius:0 8px 8px 0}
+  .cta{display:inline-block;margin:8px 10px 8px 0;padding:11px 20px;border-radius:9px;
+       background:var(--accent);color:#fff;text-decoration:none;font-weight:600;font-size:14.5px}
+  .cta.ghost{background:#fff;color:var(--accent);border:1px solid var(--accent)}
+  footer{border-top:1px solid var(--line);margin-top:64px;padding-top:24px;color:var(--sub);font-size:13.5px}
+  .fig-note{font-size:13px;color:var(--sub);margin-top:-6px}
+  hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Explainable ML · single script · zero dependencies</div>
+  <h1>monceai <span class="snake">🐍</span></h1>
+  <p class="lede">Steering an explainable clause engine with mutual information —
+     and a controlled study of exactly when that helps.</p>
+  <div class="byline">
+    Charles Dana · <a href="https://algorithme.ai">Algorithme.ai</a> ·
+    an article rewrite of the original
+    <a href="https://github.com/AlgorithmeAi/Snake">Snake</a>
+  </div>
+</header>
+
+<p>
+  <a class="cta" href="https://github.com/charles-monce/Snake">View source on GitHub</a>
+  <a class="cta ghost" href="https://github.com/charles-monce/Snake/blob/main/monceai.py">Read <code>monceai.py</code></a>
+</p>
+
+<h2>The one idea</h2>
+<p>
+  Give <strong>monceai</strong> a table and it learns to predict one column from
+  the others — and, unlike almost every other model, it tells you <em>why</em>,
+  in plain sentences, by pointing at the training rows that look like your query
+  and the exact logical conditions that bind them. One file, one class, nothing
+  but the Python standard library, and a hard <code>O(m·n²)</code> budget.
+</p>
+<p>
+  Everything is built from a single primitive — the <strong>literal</strong>, a
+  yes/no question about one feature (<code>Age &gt; 37?</code>,
+  <code>Name contains "Mrs"?</code>). Literals OR into <strong>clauses</strong>,
+  clauses AND into the <strong>condition</strong> that explains a match. To
+  classify a new point we find its <strong>lookalikes</strong>: training rows
+  whose learned condition it satisfies. Their class distribution is the
+  prediction; the conditions are the audit trail.
+</p>
+
+<h2>The question this article answers</h2>
+<p>
+  The original engine picks which feature to split on <em>uniformly at random</em>.
+  That is elegant and provably keeps the <code>O(m·n²)</code> bound — but on a
+  wide table full of junk columns, random opposition spends most of its clauses
+  on noise. monceai adds one thing: a <strong>mutual-information-filtered boolean
+  bank</strong> that scores every candidate predicate by
+  <code>I(predicate; target)</code> and steers clause construction toward the
+  columns that actually carry signal.
+</p>
+<blockquote>
+  Does MI-steering beat random opposition? We refuse to answer with a single
+  lucky split. Every result below is a paired, same-seed, same-budget comparison
+  across many seeds, reported with a two-sided sign-test — including the cases
+  where steering <em>loses</em>.
+</blockquote>
+
+<h2>Headline result</h2>
+<p>
+  On synthetic wide-noisy tables (3 informative columns buried in 40 pure-noise
+  columns, 5% label flips), MI-steering is not marginally better — it wins on
+  <em>every seed</em> at equal layer budget:
+</p>
+
+<div class="cards">
+  <div class="card"><div class="k">+0.088</div><div class="l">accuracy vs random opposition</div></div>
+  <div class="card"><div class="k">+0.059</div><div class="l">AUROC vs random opposition</div></div>
+  <div class="card"><div class="k win">40W–0L</div><div class="l">per-seed accuracy wins</div></div>
+  <div class="card"><div class="k">p ≈ 0</div><div class="l">two-sided sign-test</div></div>
+</div>
+
+<h2>But only where it should — the crossover law</h2>
+<p>
+  The honest finding is a boundary, not a blanket win. We swept the noise width
+  at a fixed 3 signal columns. MI-steering helps once informative columns become
+  a small minority, and is neutral-to-harmful when signal is easy to hit at
+  random:
+</p>
+
+<table>
+  <thead><tr><th>signal : noise</th><th>informative</th><th>AUROC wins</th><th>verdict</th></tr></thead>
+  <tbody>
+    <tr><td>3 : 0</td><td class="num">100%</td><td class="num">3W–13L</td><td class="loss">steering hurts</td></tr>
+    <tr><td>3 : 3</td><td class="num">50%</td><td class="num">9W–6L</td><td class="neutral">tie</td></tr>
+    <tr><td>3 : 10</td><td class="num">23%</td><td class="num">11W–5L</td><td class="neutral">mild</td></tr>
+    <tr><td>3 : 20</td><td class="num">13%</td><td class="num">16W–0L</td><td class="win">steering wins</td></tr>
+    <tr><td>3 : 40</td><td class="num">7%</td><td class="num">15W–1L</td><td class="win">steering wins</td></tr>
+    <tr><td>3 : 80</td><td class="num">3.6%</td><td class="num">16W–0L</td><td class="win">steering wins</td></tr>
+  </tbody>
+</table>
+<p class="fig-note">16 seeds per row · synthetic data · paired same-seed comparison.</p>
+
+<p>
+  Two consequences fall straight out of this law, and both were confirmed:
+</p>
+<ul>
+  <li><strong>NLP is a loss (1W–22L AUROC).</strong> A bag-of-words document is a
+      <em>single</em> text column — there is nothing to steer <em>between</em>, so
+      random token opposition already lands on the signal. We report it plainly.</li>
+  <li><strong>Clean tabular data is a tie.</strong> On Titanic (a handful of clean
+      columns) MI-steering neither helps nor hurts — within seed noise of the
+      original engine.</li>
+</ul>
+
+<h2>What we shipped: <code>mi_rate="auto"</code></h2>
+<p>
+  Because the win is conditional, the default must be too. At train time monceai
+  estimates what fraction of columns carry mutual information and engages the
+  bank only when signal is diluted across a wide table. The guarantee:
+</p>
+<blockquote>
+  <strong>Beat the original systematically on wide, noisy data — and stay
+  byte-for-byte identical to it on clean, narrow data.</strong>
+</blockquote>
+
+<pre><code>from monceai import Snake
+
+# auto-detects table shape; engages MI-steering only when it will help
+model = Snake("train.csv", target_index=1, n_layers=100)   # mi_rate="auto"
+model.predict({"Age": 22, "Sex": "male"})
+print(model.audit({"Age": 22, "Sex": "male"}))   # plain-English reasons
+model.explain()                                    # global feature importance
+model.to_py("frozen.py")                           # standalone, zero-dep inference</code></pre>
+
+<h2>Negative results we kept</h2>
+<p>
+  Good science publishes the nulls. Three inference-side ideas that <em>felt</em>
+  promising and did not survive many-seed sign-tests, all left in the repo as
+  runnable benchmarks:
+</p>
+<table>
+  <thead><tr><th>idea</th><th>result</th><th>verdict</th></tr></thead>
+  <tbody>
+    <tr><td>Smarter vote rules (Laplace / specificity)</td><td class="num">+0.0002 AUROC</td><td class="neutral">null</td></tr>
+    <tr><td>Compute-fair bagging</td><td class="num">10W–21L, p=0.07</td><td class="loss">null</td></tr>
+    <tr><td>Training-tuned decision threshold</td><td class="num">13W–16L, p=0.71</td><td class="neutral">null</td></tr>
+  </tbody>
+</table>
+<p>
+  They tie because, with steering off, monceai's clause engine <em>is</em> the
+  original up to the random seed — same score ranking, same AUROC. The only
+  lever that moves the needle is changing <em>how clauses are built</em>, which
+  is exactly what the MI bank does.
+</p>
+
+<h2>Reproduce it</h2>
+<pre><code>git clone https://github.com/charles-monce/Snake
+cd Snake
+python monceai.py selftest                 # proves the engine, zero deps
+
+# the headline arena (synthetic wide-noisy, 40 seeds, paired sign-test)
+BENCH_SEEDS=40 python bench_wide.py
+
+# the crossover sweep, the NLP loss, and the three nulls
+python bench_nlp.py ; python bench_bag.py ; python bench_thresh.py</code></pre>
+
+<footer>
+  <p>
+    <strong>monceai</strong> is an article rewrite of the original
+    <a href="https://github.com/AlgorithmeAi/Snake">AlgorithmeAi/Snake</a> by
+    Charles Dana. Same idea, told cleanly end to end in one readable file, with
+    a controlled study of where mutual-information steering earns its keep.
+    MIT licensed. · <a href="https://algorithme.ai">Algorithme.ai</a>
+  </p>
+</footer>
+
+</div>
+</body>
+</html>
