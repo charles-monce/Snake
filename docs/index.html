@@ -79,6 +79,77 @@
   .collab{display:inline-block;margin:14px 0 0;padding:5px 12px;border-radius:999px;
           background:linear-gradient(90deg,#3b3b98,#d97757);color:#fff;
           font:600 12px/1 var(--mono);letter-spacing:.04em}
+  /* ---- the magic box: a real in-browser monceai model ---- */
+  .magic{position:relative;margin:28px 0 8px;border-radius:18px;overflow:hidden;
+         background:radial-gradient(120% 140% at 15% -10%,#252556 0%,#161631 45%,#0e0e22 100%);
+         border:1px solid #33336b;box-shadow:0 24px 60px -28px rgba(59,59,152,.7),inset 0 1px 0 rgba(255,255,255,.06)}
+  .magic::before{content:"";position:absolute;inset:-1px;border-radius:18px;pointer-events:none;
+         background:linear-gradient(120deg,transparent 30%,rgba(217,119,87,.35),transparent 70%);
+         opacity:.6;mix-blend-mode:screen}
+  .magic .inner{position:relative;padding:22px 22px 24px}
+  .magic .tag{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+              color:#a9a9e6;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .magic .tag .dot{width:7px;height:7px;border-radius:50%;background:#48d597;
+              box-shadow:0 0 10px #48d597;animation:pulse 2s ease-in-out infinite}
+  @keyframes pulse{50%{opacity:.35}}
+  .magic h3{color:#fff;margin:2px 0 2px;font-size:1.25rem;letter-spacing:-.01em}
+  .magic .sub{color:#b6b6e0;font-size:13.5px;margin:0 0 16px}
+  .magic .sub code{background:rgba(255,255,255,.08);color:#dcdcff}
+  .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:14px}
+  .field label{display:block;font:600 11px/1.4 var(--mono);color:#9a9ad6;
+               text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+  .field input,.field select{width:100%;padding:9px 11px;border-radius:9px;
+               background:rgba(9,9,26,.7);border:1px solid #3a3a72;color:#f2f2ff;
+               font:14px var(--mono);outline:none;transition:border-color .15s,box-shadow .15s}
+  .field input:focus,.field select:focus{border-color:#7b7bff;box-shadow:0 0 0 3px rgba(123,123,255,.25)}
+  .field select option{background:#12122b}
+  .runbtn{display:inline-flex;align-items:center;gap:9px;padding:11px 22px;border:0;cursor:pointer;
+          border-radius:10px;font:700 14.5px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+          color:#fff;background:linear-gradient(90deg,#4b4bd6,#d97757);
+          box-shadow:0 10px 24px -10px rgba(123,123,255,.8);transition:transform .1s,filter .15s}
+  .runbtn:hover{filter:brightness(1.08)}
+  .runbtn:active{transform:translateY(1px)}
+  .runbtn[disabled]{opacity:.6;cursor:progress}
+  .runbtn .arrow{font-size:16px}
+  /* pipeline */
+  .pipe{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:20px 0 4px}
+  .node{flex:1 1 0;min-width:96px;padding:11px 12px;border-radius:11px;text-align:center;
+        background:rgba(255,255,255,.03);border:1px solid #2c2c5c;
+        opacity:.4;transform:translateY(4px);transition:all .4s cubic-bezier(.2,.7,.3,1)}
+  .node.lit{opacity:1;transform:translateY(0);border-color:#7b7bff;
+        background:linear-gradient(180deg,rgba(75,75,214,.28),rgba(75,75,214,.08));
+        box-shadow:0 0 24px -6px rgba(123,123,255,.7)}
+  .node .nk{font:700 1.35rem/1 #fff;color:#fff;font-variant-numeric:tabular-nums}
+  .node .nl{font:600 10.5px/1.3 var(--mono);color:#a3a3dd;text-transform:uppercase;
+        letter-spacing:.05em;margin-top:6px}
+  .arrowsep{color:#4a4a86;font-size:15px;flex:0 0 auto}
+  /* verdict */
+  .verdict{margin-top:18px;padding:16px 18px;border-radius:13px;
+           background:rgba(9,9,26,.55);border:1px solid #33336b;
+           opacity:0;transform:translateY(6px);transition:all .5s ease}
+  .verdict.show{opacity:1;transform:translateY(0)}
+  .verdict .headline{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .verdict .pred{font-size:1.5rem;font-weight:800;color:#fff;letter-spacing:-.01em}
+  .verdict .conf{font:600 13px/1 var(--mono);color:#48d597}
+  .bars{margin:14px 0 4px;display:grid;gap:8px}
+  .bar{display:grid;grid-template-columns:118px 1fr 48px;align-items:center;gap:10px;
+       font:12.5px var(--mono);color:#c9c9f0}
+  .bar .track{height:9px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+  .bar .fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#4b4bd6,#7b7bff);
+             width:0;transition:width .8s cubic-bezier(.2,.7,.3,1)}
+  .bar.top .fill{background:linear-gradient(90deg,#4b4bd6,#d97757)}
+  .bar .pct{text-align:right;color:#e8e8ff;font-variant-numeric:tabular-nums}
+  .because{margin-top:14px;border-top:1px dashed #33336b;padding-top:12px}
+  .because .h{font:600 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+              color:#9a9ad6;margin-bottom:8px}
+  .reason{font-size:13px;line-height:1.55;color:#d3d3f2;margin:6px 0;padding-left:16px;
+          position:relative}
+  .reason::before{content:"↳";position:absolute;left:0;color:#d97757}
+  .reason code{background:rgba(255,255,255,.09);color:#fff;padding:1px 5px;border-radius:4px;
+               font-size:12px}
+  .reason .cls{color:#48d597;font-weight:600}
+  .magic .foot{margin-top:16px;font:11.5px var(--mono);color:#7a7ab5}
+  .magic .foot b{color:#b6b6e0;font-weight:600}
 </style>
 </head>
 <body>
@@ -114,6 +185,46 @@
   <a class="cta" href="https://github.com/charles-monce/Snake">View source on GitHub</a>
   <a class="cta ghost" href="https://github.com/charles-monce/Snake/blob/main/monceai.py">Read <code>monceai.py</code></a>
 </p>
+
+<!-- ============ the magic box: a real monceai model, running in your browser ============ -->
+<div class="magic" id="magic" hidden>
+  <div class="inner">
+    <div class="tag"><span class="dot"></span>live · running in your browser</div>
+    <h3>Watch it think.</h3>
+    <p class="sub">This is a <b>real</b> monceai model — 1,002 clauses over 150 training rows,
+      trained by <code>monceai.py</code> and frozen to JSON. No server, no API: the same
+      <code>apply_clause → lookalikes → vote</code> path runs right here. Describe a traveller;
+      it recommends a trip and shows you exactly why.</p>
+
+    <div class="fields" id="fields"><!-- built from the model schema --></div>
+    <button class="runbtn" id="run"><span class="arrow">▸</span> classify</button>
+
+    <div class="pipe" id="pipe">
+      <div class="node" data-step="0"><div class="nk" id="n-lit">·</div><div class="nl">literals fired</div></div>
+      <span class="arrowsep">→</span>
+      <div class="node" data-step="1"><div class="nk" id="n-cl">·</div><div class="nl">clauses false</div></div>
+      <span class="arrowsep">→</span>
+      <div class="node" data-step="2"><div class="nk" id="n-cond">·</div><div class="nl">conditions met</div></div>
+      <span class="arrowsep">→</span>
+      <div class="node" data-step="3"><div class="nk" id="n-look">·</div><div class="nl">lookalikes</div></div>
+    </div>
+
+    <div class="verdict" id="verdict">
+      <div class="headline">
+        <span class="pred" id="pred">—</span>
+        <span class="conf" id="conf"></span>
+      </div>
+      <div class="bars" id="bars"></div>
+      <div class="because">
+        <div class="h">because your traveller looks like…</div>
+        <div id="reasons"></div>
+      </div>
+    </div>
+
+    <div class="foot">real engine · <b id="m-clauses">0</b> clauses · <b id="m-rows">0</b> rows ·
+      byte-for-byte the <code>monceai.py</code> inference path · <b>mi_rate="auto"</b></div>
+  </div>
+</div>
 
 <h2>The one idea</h2>
 <p>
@@ -307,5 +418,221 @@ python bench_nlp.py ; python bench_bag.py ; python bench_thresh.py</code></pre>
 </footer>
 
 </div>
+
+<!-- ============ magic box engine: monceai.py inference, ported verbatim to JS ============ -->
+<script>
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+
+  // ---- monceai inference, a line-for-line port of monceai.py -------------
+  // apply_literal / apply_clause / lookalikes_of / predict_proba / _phrase.
+  function applyLiteral(X, lit) {
+    const [index, value, negated, tag] = lit;
+    const h = M.header[index];
+    if (!(h in X)) return false;
+    if (tag === "N") return negated ? value <= X[h] : value > X[h];
+    if (tag === "T") {
+      const s = String(X[h]);
+      return negated ? !s.includes(value) : s.includes(value);
+    }
+    const s = String(X[h]);
+    let n;
+    if (tag === "TN") n = s.length;
+    else if (tag === "TLN") n = new Set(s).size;
+    else if (tag === "TWS") n = s.split(" ").length;
+    else if (tag === "TPS") n = s.split(",").length;
+    else if (tag === "TSS") n = s.split(".").length;
+    else return false;
+    return negated ? value <= n : value > n;
+  }
+  function applyClause(X, clause) {
+    for (const lit of clause) if (applyLiteral(X, lit) === true) return true;
+    return false;
+  }
+  function lookalikesOf(X) {
+    const clauseFalse = new Set();
+    for (let i = 0; i < M.clauses.length; i++)
+      if (!applyClause(X, M.clauses[i])) clauseFalse.add(i);
+    const found = [];
+    for (const l in M.lookalikes) {
+      for (const condition of M.lookalikes[l]) {
+        if (condition.every((c) => clauseFalse.has(c)))
+          found.push([parseInt(l, 10), M.targets[parseInt(l, 10)], condition]);
+      }
+    }
+    return { found, clauseFalse };
+  }
+  function predictProba(found) {
+    const classes = [...new Set(M.targets)].sort();
+    if (!found.length) {
+      const p = {}; classes.forEach((c) => (p[c] = 1 / classes.length)); return p;
+    }
+    const p = {};
+    classes.forEach((c) => (p[c] = found.filter(([, t]) => t === c).length / found.length));
+    return p;
+  }
+  function fmtG(v) {
+    if (typeof v !== "number") return v;
+    if (Number.isInteger(v)) return String(v);
+    return parseFloat(v.toPrecision(6)).toString();
+  }
+  function phrase(lit) {              // == monceai.py _phrase()
+    const [index, value, negated, tag] = lit;
+    const h = M.header[index];
+    if (tag === "N") return `<code>${h}</code> is ${negated ? "≤" : ">"} ${fmtG(value)}`;
+    if (tag === "T") return `<code>${h}</code> ${negated ? "does not contain" : "contains"} “${value}”`;
+    const noun = { TN: "length", TLN: "distinct characters", TWS: "word count",
+                   TPS: "comma-sections", TSS: "sentences" }[tag];
+    return `<code>${h}</code> ${noun} ${negated ? "≤" : ">"} ${fmtG(value)}`;
+  }
+
+  // ---- UI ----------------------------------------------------------------
+  let M = null;
+  const EXAMPLE = { budget_usd: 1800, days: 9, climate: "cold", group_size: 2,
+                    wants: "hiking waterfalls camping" };
+  const NICE = {
+    budget_usd: "budget (usd)", days: "trip length (days)", climate: "climate",
+    group_size: "group size", wants: "what they want",
+  };
+
+  function buildFields() {
+    const box = $("fields");
+    for (let i = 1; i < M.header.length; i++) {
+      const h = M.header[i], dt = M.datatypes[i];
+      const wrap = document.createElement("div");
+      wrap.className = "field";
+      const label = document.createElement("label");
+      label.textContent = NICE[h] || h;
+      label.setAttribute("for", "f-" + h);
+      wrap.appendChild(label);
+
+      // low-cardinality text column -> dropdown; else free text; numeric -> number
+      let input;
+      if (dt === "N") {
+        input = document.createElement("input");
+        input.type = "number";
+        input.value = EXAMPLE[h] != null ? EXAMPLE[h] : 0;
+      } else {
+        const vals = [...new Set(M.population.map((r) => String(r[h])))];
+        if (vals.length <= 8) {
+          input = document.createElement("select");
+          vals.sort().forEach((v) => {
+            const o = document.createElement("option");
+            o.value = v; o.textContent = v; input.appendChild(o);
+          });
+          input.value = EXAMPLE[h] != null ? EXAMPLE[h] : vals[0];
+        } else {
+          input = document.createElement("input");
+          input.type = "text";
+          input.value = EXAMPLE[h] != null ? EXAMPLE[h] : "";
+          input.placeholder = "e.g. " + String(M.population[0][h]).slice(0, 24);
+        }
+      }
+      input.id = "f-" + h;
+      input.dataset.h = h; input.dataset.dt = dt;
+      wrap.appendChild(input);
+      box.appendChild(wrap);
+    }
+  }
+
+  function readQuery() {
+    const X = {};
+    document.querySelectorAll("#fields [data-h]").forEach((el) => {
+      const h = el.dataset.h;
+      X[h] = el.dataset.dt === "N" ? parseFloat(el.value || "0") : String(el.value);
+    });
+    return X;
+  }
+
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  async function run() {
+    const btn = $("run");
+    btn.disabled = true;
+    $("verdict").classList.remove("show");
+    document.querySelectorAll("#pipe .node").forEach((n) => n.classList.remove("lit"));
+
+    const X = readQuery();
+    const { found, clauseFalse } = lookalikesOf(X);
+
+    // pipeline stage counts (each an honest quantity from the real engine)
+    let litFired = 0;
+    for (const clause of M.clauses) for (const lit of clause) if (applyLiteral(X, lit)) litFired++;
+    const conditionsMet = found.length;
+    const distinctRows = new Set(found.map((f) => f[0])).size;
+    const steps = [litFired, clauseFalse.size, conditionsMet, distinctRows];
+    const ids = ["n-lit", "n-cl", "n-cond", "n-look"];
+
+    for (let s = 0; s < 4; s++) {
+      const node = document.querySelector('#pipe .node[data-step="' + s + '"]');
+      node.classList.add("lit");
+      $(ids[s]).textContent = steps[s].toLocaleString();
+      await sleep(300);
+    }
+    await sleep(120);
+
+    // verdict — argmax exactly like predict()
+    const proba = predictProba(found);
+    const classes = Object.keys(proba);
+    let best = classes[0];
+    classes.forEach((c) => { if (proba[c] > proba[best]) best = c; });
+    $("pred").textContent = best;
+    $("conf").textContent = found.length
+      ? Math.round(proba[best] * 100) + "% of " + found.length + " lookalike votes"
+      : "no lookalikes — prior guess";
+
+    // probability bars
+    const bars = $("bars"); bars.innerHTML = "";
+    classes.sort((a, b) => proba[b] - proba[a]).forEach((c) => {
+      const row = document.createElement("div");
+      row.className = "bar" + (c === best ? " top" : "");
+      row.innerHTML = `<span>${c}</span><span class="track"><span class="fill"></span></span>` +
+                      `<span class="pct">${Math.round(proba[c] * 100)}%</span>`;
+      bars.appendChild(row);
+      requestAnimationFrame(() => { row.querySelector(".fill").style.width = (proba[c] * 100) + "%"; });
+    });
+
+    // reasons — the real audit trail (up to 3 lookalikes, capped literals for readability)
+    const reasons = $("reasons"); reasons.innerHTML = "";
+    if (!found.length) {
+      reasons.innerHTML = '<div class="reason">No training row’s learned condition was satisfied — the model abstains to the class prior.</div>';
+    } else {
+      found.slice(0, 3).forEach(([idx, target, condition]) => {
+        const lits = [];
+        for (const c of condition) for (const lit of M.clauses[c]) lits.push(lit);
+        const shown = lits.slice(0, 4).map(phrase).join("; ");
+        const more = lits.length > 4 ? ` <span style="color:#7a7ab5">(+${lits.length - 4} more)</span>` : "";
+        const div = document.createElement("div");
+        div.className = "reason";
+        div.innerHTML = `like <code>row #${idx}</code> <span class="cls">${target}</span> — ${shown || "(trivially)"}${more}`;
+        reasons.appendChild(div);
+      });
+      if (distinctRows > 3) {
+        const div = document.createElement("div");
+        div.className = "reason"; div.style.opacity = ".7";
+        div.innerHTML = `…and ${distinctRows - 3} more lookalike rows voting.`;
+        reasons.appendChild(div);
+      }
+    }
+
+    $("verdict").classList.add("show");
+    btn.disabled = false;
+  }
+
+  fetch("demo_model.json")
+    .then((r) => r.json())
+    .then((m) => {
+      M = m;
+      $("m-clauses").textContent = m.clauses.length.toLocaleString();
+      $("m-rows").textContent = m.population.length.toLocaleString();
+      buildFields();
+      $("magic").hidden = false;
+      $("run").addEventListener("click", run);
+      run();  // show a first result immediately
+    })
+    .catch(() => { /* model failed to load: box stays hidden, page unaffected */ });
+})();
+</script>
 </body>
 </html>
