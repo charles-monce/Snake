@@ -85,4 +85,7 @@ python bench_ai.py                # head-to-head vs algorithmeai on Titanic
 
 ## License
 
-MIT
+MIT — the monceai contribution (`monceai.py`, the `bench_*.py` harnesses, and
+`docs/`) is Copyright (c) 2026 Charles Dana and Claude Opus (Anthropic); see
+[`LICENSE-monceai`](LICENSE-monceai). The rest of the repository remains under
+the original [`LICENSE`](LICENSE) (Copyright Algorithme.ai).

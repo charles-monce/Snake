@@ -6,6 +6,9 @@
 
     The single script that encodes everything.
 
+    Copyright (c) 2026 Charles Dana and Claude Opus (Anthropic).
+    MIT licensed — see LICENSE-monceai.
+
     A dependency-free, O(m·n^2)-budgeted, explainable oracle for CSV data.
     One file. One class. One idea, followed all the way down.
 
